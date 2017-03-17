@@ -22,7 +22,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://cr_mit/URDF/P101223/meshes/P101223.STL" />
+          filename="package://P101223/meshes/P101223.STL" />
       </geometry>
       <material
         name="">
@@ -36,7 +36,7 @@
         rpy="1.5707963267949 0 0" />
       <geometry>
         <mesh
-          filename="package://cr_mit/URDF/P101223/meshes/P101223.STL" />
+          filename="package://P101223/meshes/P101223.STL" />
       </geometry>
     </collision>
   </link>

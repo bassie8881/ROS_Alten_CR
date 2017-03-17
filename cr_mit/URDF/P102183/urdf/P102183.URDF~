@@ -1,20 +1,20 @@
 <robot
-  name="P101223">
+  name="P102183">
   <link
-    name="P101223">
+    name="P102183">
     <inertial>
       <origin
-        xyz="3.5436E-07 0.049285 0.049285"
+        xyz="0.069796 -3.11949999999573E-06 0.069807"
         rpy="0 0 0" />
       <mass
-        value="0.4164" />
+        value="6.1923" />
       <inertia
-        ixx="0.00096351196272473"
-        ixy="7.36170006114099E-10"
-        ixz="-2.33259479550071E-09"
-        iyy="0.000637322444502945"
-        iyz="0.000336461286360461"
-        izz="0.000637320159012181" />
+        ixx="0.068077102441757"
+        ixy="1.59646342701941E-06"
+        ixz="-0.0299560781515783"
+        iyy="0.0904972504008226"
+        iyz="1.70340389475344E-06"
+        izz="0.0680827224732661" />
     </inertial>
     <visual>
       <origin
@@ -22,7 +22,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://cr_mit/URDF/P101223/meshes/P101223.STL" />
+          filename="package://P102183/meshes/P102183.STL" />
       </geometry>
       <material
         name="">
@@ -36,7 +36,7 @@
         rpy="1.5707963267949 0 0" />
       <geometry>
         <mesh
-          filename="package://cr_mit/URDF/P101223/meshes/P101223.STL" />
+          filename="package://P102183/meshes/P102183.STL" />
       </geometry>
     </collision>
   </link>

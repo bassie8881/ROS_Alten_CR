@@ -22,12 +22,12 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://fitting_mjdb9010/meshes/fitting_mjdb9010.STL" />
+          filename="package://cr_mit/URDF/fitting_mjdb9010/meshes/fitting_mjdb9010.STL" />
       </geometry>
       <material
         name="">
         <color
-          rgba="0 0 0 1" />
+          rgba="0.63922 0.63922 0.68627 1" />
       </material>
     </visual>
     <collision>
@@ -36,7 +36,7 @@
         rpy="1.5707963267949 0 0" />
       <geometry>
         <mesh
-          filename="package://fitting_mjdb9010/meshes/fitting_mjdb9010.STL" />
+          filename="package://cr_mit/URDF/fitting_mjdb9010/meshes/fitting_mjdb9010.STL" />
       </geometry>
     </collision>
   </link>
