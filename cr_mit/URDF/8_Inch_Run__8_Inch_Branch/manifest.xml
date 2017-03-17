@@ -1,0 +1,6 @@
+<package>
+  <description brief="8_Inch_Run__8_Inch_Branch">8_Inch_Run__8_Inch_Branch</description>
+  <depend package="gazebo" />
+  <author>me</author>
+  <license>BSD</license>
+</package>

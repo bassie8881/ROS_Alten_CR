@@ -1,0 +1,43 @@
+<robot
+  name="P101223">
+  <link
+    name="P101223">
+    <inertial>
+      <origin
+        xyz="3.5436E-07 0.049285 0.049285"
+        rpy="0 0 0" />
+      <mass
+        value="0.4164" />
+      <inertia
+        ixx="0.00096351196272473"
+        ixy="7.36170006114099E-10"
+        ixz="-2.33259479550071E-09"
+        iyy="0.000637322444502945"
+        iyz="0.000336461286360461"
+        izz="0.000637320159012181" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="1.5707963267949 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://P101223/meshes/P101223.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.77647 0.75686 0.73725 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="1.5707963267949 0 0" />
+      <geometry>
+        <mesh
+          filename="package://P101223/meshes/P101223.STL" />
+      </geometry>
+    </collision>
+  </link>
+</robot>

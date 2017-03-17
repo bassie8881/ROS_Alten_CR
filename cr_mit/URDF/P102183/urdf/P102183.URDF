@@ -1,0 +1,43 @@
+<robot
+  name="P102183">
+  <link
+    name="P102183">
+    <inertial>
+      <origin
+        xyz="0.069796 -3.11949999999573E-06 0.069807"
+        rpy="0 0 0" />
+      <mass
+        value="6.1923" />
+      <inertia
+        ixx="0.068077102441757"
+        ixy="1.59646342701941E-06"
+        ixz="-0.0299560781515783"
+        iyy="0.0904972504008226"
+        iyz="1.70340389475344E-06"
+        izz="0.0680827224732661" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="1.5707963267949 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://P102183/meshes/P102183.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.77647 0.75686 0.73725 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="1.5707963267949 0 0" />
+      <geometry>
+        <mesh
+          filename="package://P102183/meshes/P102183.STL" />
+      </geometry>
+    </collision>
+  </link>
+</robot>

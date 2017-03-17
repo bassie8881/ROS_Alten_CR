@@ -1,0 +1,43 @@
+<robot
+  name="fitting_mjdb9010">
+  <link
+    name="fitting_mjdb9010">
+    <inertial>
+      <origin
+        xyz="-0.11327 -1.62429999998983E-06 0.16613"
+        rpy="0 0 0" />
+      <mass
+        value="11.408" />
+      <inertia
+        ixx="0.388381580287534"
+        ixy="-2.3688893615919E-06"
+        ixz="-0.142731078269737"
+        iyy="0.517613356896985"
+        iyz="4.82209477174773E-06"
+        izz="0.388382425438564" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="1.5707963267949 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://fitting_mjdb9010/meshes/fitting_mjdb9010.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0 0 0 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="1.5707963267949 0 0" />
+      <geometry>
+        <mesh
+          filename="package://fitting_mjdb9010/meshes/fitting_mjdb9010.STL" />
+      </geometry>
+    </collision>
+  </link>
+</robot>

@@ -1,0 +1,43 @@
+<robot
+  name="8_Inch_Run__8_Inch_Branch">
+  <link
+    name="8_Inch_Run__8_Inch_Branch">
+    <inertial>
+      <origin
+        xyz="1.2379E-06 -7.53419999971178E-08 0.047071"
+        rpy="0 0 0" />
+      <mass
+        value="9.5382" />
+      <inertia
+        ixx="0.353208963483381"
+        ixy="-2.93014743422867E-08"
+        ixz="-6.86065067557117E-07"
+        iyy="0.208541129068121"
+        iyz="3.84960138526551E-07"
+        izz="0.303547380649714" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="1.5707963267949 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://8_Inch_Run__8_Inch_Branch/meshes/8_Inch_Run__8_Inch_Branch.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.63922 0.63922 0.68627 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="1.5707963267949 0 0" />
+      <geometry>
+        <mesh
+          filename="package://8_Inch_Run__8_Inch_Branch/meshes/8_Inch_Run__8_Inch_Branch.STL" />
+      </geometry>
+    </collision>
+  </link>
+</robot>

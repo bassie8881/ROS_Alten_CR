@@ -1,0 +1,6 @@
+<package>
+  <description brief="fitting_mjdb9010">fitting_mjdb9010</description>
+  <depend package="gazebo" />
+  <author>me</author>
+  <license>BSD</license>
+</package>
