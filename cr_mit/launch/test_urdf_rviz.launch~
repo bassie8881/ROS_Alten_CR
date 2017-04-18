@@ -1,7 +1,7 @@
 <launch>
   <master auto="start"/>
   <param name="/use_sim_time" value="true"/>
-  <param name="robot_description" textfile="$(find cr_mit)/URDF/8_Inch_Run__8_Inch_Branch/urdf/8_Inch_Run__8_Inch_Branch.URDF">
+  <param name="robot_description" textfile="$(find cr_mit)/URDF/8_Inch_Run__8_Inch_Branch/urdf/8_Inch_Run__8_Inch_Branch.URDF"/>
   <!-- param name="robot_description" textfile="$(find cr_mit)/URDF/09_fitting_mjdb9010/urdf/fitting_mjdb9010.URDF" -->
   <!--param name="robot_description" textfile="$(find cr_mit)/URDF/fitting_mjdb9010/urdf/fitting_mjdb9010.URDF" -->
   <!--param name="robot_description" textfile="$(find cr_mit)/URDF/P101223/urdf/P101223.URDF"-->
@@ -9,4 +9,7 @@
 
   <!-- Run RViz -->
   <node name="rviz" pkg="rviz" type="rviz" required="true" args="-d $(find cr_mit)/config/rviz/cr_test_urdf.rviz" />
+
+  <node pkg="cr_mit" type="marker_viz" name="Marker_visualisation"/>
+
 </launch>

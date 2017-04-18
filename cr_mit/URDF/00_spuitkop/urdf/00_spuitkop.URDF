@@ -1,0 +1,44 @@
+<robot
+  name="00_spuitkop">
+  <link
+    name="00_spuitkop"
+    type="floating">
+    <inertial>
+      <origin
+        xyz="3.0263E-08 -0.0037223 1.88710000002279E-08"
+        rpy="0 0 0" />
+      <mass
+        value="0.073584" />
+      <inertia
+        ixx="0.000368080227636541"
+        ixy="-1.98610106414483E-10"
+        ixz="8.15533606242805E-11"
+        iyy="6.92935528074029E-06"
+        iyz="6.44887113101755E-11"
+        izz="0.000368080310653381" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="1.5707963267949 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://cr_mit/URDF/00_spuitkop/meshes/00_spuitkop.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.7451 0.7451 0.7451 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="1.5707963267949 0 0" />
+      <geometry>
+        <mesh
+          filename="package://cr_mit/URDF/00_spuitkop/meshes/00_spuitkop.STL" />
+      </geometry>
+    </collision>
+  </link>
+</robot>
