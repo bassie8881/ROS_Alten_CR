@@ -6,11 +6,10 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
-        - /Grid1
         - /RobotModel1
         - /RobotModel1/Links1
         - /RobotModel1/Links1/00_spuitkop1
-        - /RobotModel2
+        - /TF1/Frames1
       Splitter Ratio: 0.661435
     Tree Height: 745
   - Class: rviz/Selection
@@ -60,7 +59,7 @@ Visualization Manager:
       Links:
         00_spuitkop:
           Alpha: 1
-          Show Axes: false
+          Show Axes: true
           Show Trail: true
           Value: true
         All Links Enabled: true
@@ -95,6 +94,20 @@ Visualization Manager:
       Update Interval: 0
       Value: true
       Visual Enabled: true
+    - Class: rviz/TF
+      Enabled: false
+      Frame Timeout: 15
+      Frames:
+        All Enabled: false
+      Marker Scale: 1
+      Name: TF
+      Show Arrows: true
+      Show Axes: true
+      Show Names: true
+      Tree:
+        {}
+      Update Interval: 0
+      Value: false
   Enabled: true
   Global Options:
     Background Color: 191; 191; 191
@@ -119,22 +132,22 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/XYOrbit
-      Distance: 0.48346
+      Distance: 0.432075
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.06
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.226576
-        Y: -0.114567
-        Z: -1.3195e-05
+        X: 0.0781285
+        Y: -0.10049
+        Z: -1.31643e-05
       Name: Current View
       Near Clip Distance: 0.01
-      Pitch: 0.614797
+      Pitch: 0.479796
       Target Frame: <Fixed Frame>
       Value: XYOrbit (rviz)
-      Yaw: 5.52351
+      Yaw: 5.44852
     Saved: ~
 Window Geometry:
   Displays:
