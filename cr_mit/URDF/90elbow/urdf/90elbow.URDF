@@ -1,0 +1,43 @@
+<robot
+  name="90elbow">
+  <link
+    name="90elbow">
+    <inertial>
+      <origin
+        xyz="-0.059761 0.090239 2.95719999447464E-09"
+        rpy="0 0 0" />
+      <mass
+        value="1.8591" />
+      <inertia
+        ixx="0.00916482144293095"
+        ixy="-0.00557736620182532"
+        ixz="6.15460965933823E-09"
+        iyy="0.00916482144293095"
+        iyz="-6.15460965937874E-09"
+        izz="0.015424719956607" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="1.5707963267949 0 1.5707963267949" />
+      <geometry>
+        <mesh
+          filename="package://cr_mit/URDF/90elbow/meshes/90elbow.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.7451 0.7451 0.7451 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="1.5707963267949 0 0" />
+      <geometry>
+        <mesh
+          filename="package://cr_mit/URDF/90elbow/meshes/90elbow.STL" />
+      </geometry>
+    </collision>
+  </link>
+</robot>

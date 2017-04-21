@@ -6,8 +6,8 @@
 void poseTransform(visualization_msgs::Marker msg){
     static tf::TransformBroadcaster transformer;
     geometry_msgs::TransformStamped marker_trans;
-    marker_trans.header.frame_id = "my_frame";
-    marker_trans.child_frame_id = "map";
+    marker_trans.header.frame_id = "map";
+    marker_trans.child_frame_id = "my_frame";
     marker_trans.transform.translation.x = msg.pose.position.x;
     marker_trans.transform.translation.y = msg.pose.position.y;
     marker_trans.transform.translation.z = msg.pose.position.z;

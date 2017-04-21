@@ -1,29 +1,28 @@
 <robot
-  name="00_spuitkop">
+  name="90elbow">
   <link
-    name="00_spuitkop"
-    type="floating">
+    name="90elbow">
     <inertial>
       <origin
-        xyz="3.0263E-08 -0.0037223 1.88710000002279E-08"
+        xyz="-0.059761 0.090239 2.95719999447464E-09"
         rpy="0 0 0" />
       <mass
-        value="0.073584" />
+        value="1.8591" />
       <inertia
-        ixx="0.000368080227636541"
-        ixy="-1.98610106414483E-10"
-        ixz="8.15533606242805E-11"
-        iyy="6.92935528074029E-06"
-        iyz="6.44887113101755E-11"
-        izz="0.000368080310653381" />
+        ixx="0.00916482144293095"
+        ixy="-0.00557736620182532"
+        ixz="6.15460965933823E-09"
+        iyy="0.00916482144293095"
+        iyz="-6.15460965937874E-09"
+        izz="0.015424719956607" />
     </inertial>
     <visual>
       <origin
-        xyz="1 0 0"
+        xyz="0 0 0"
         rpy="1.5707963267949 0 -1.5707963267949" />
       <geometry>
         <mesh
-          filename="package://cr_mit/URDF/00_spuitkop/meshes/00_spuitkop.STL" />
+          filename="package://cr_mit/URDF/90elbow/meshes/90elbow.STL" />
       </geometry>
       <material
         name="">
@@ -37,7 +36,7 @@
         rpy="1.5707963267949 0 0" />
       <geometry>
         <mesh
-          filename="package://cr_mit/URDF/00_spuitkop/meshes/00_spuitkop.STL" />
+          filename="package://cr_mit/URDF/90elbow/meshes/90elbow.STL" />
       </geometry>
     </collision>
   </link>

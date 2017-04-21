@@ -1,0 +1,43 @@
+<robot
+  name="90elbow_200_3">
+  <link
+    name="90elbow_200_3">
+    <inertial>
+      <origin
+        xyz="-0.11588 0.18412 8.40989998872627E-09"
+        rpy="0 0 0" />
+      <mass
+        value="5.7063" />
+      <inertia
+        ixx="0.0906631653008137"
+        ixy="-0.0608478546239511"
+        ixz="8.46000393855595E-08"
+        iyy="0.0906631653008137"
+        iyz="-8.46000393870327E-08"
+        izz="0.15814450757059" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="1.5707963267949 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://cr_mit/URDF/90elbow_200_3/meshes/90elbow_200_3.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.7451 0.7451 0.7451 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="1.5707963267949 0 0" />
+      <geometry>
+        <mesh
+          filename="package://cr_mit/URDF/90elbow_200_3/meshes/90elbow_200_3.STL" />
+      </geometry>
+    </collision>
+  </link>
+</robot>

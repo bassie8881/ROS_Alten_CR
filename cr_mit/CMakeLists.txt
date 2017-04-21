@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 2.8.3)
 project(cr_mit)
 
 find_package(catkin REQUIRED COMPONENTS
+  geometry_msgs
   roscpp
   rospy
   std_msgs
@@ -25,3 +26,9 @@ add_executable(marker_viz src/marker_viz.cpp)
 target_link_libraries(marker_viz 
    ${catkin_LIBRARIES})
 add_dependencies(marker_viz ${${cr_mit}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
+add_executable(spuit_control src/spuit_control.cpp)
+target_link_libraries(spuit_control
+   ${catkin_LIBRARIES})
+add_dependencies(spuit_control ${${cr_mit}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+

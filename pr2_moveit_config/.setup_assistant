@@ -1,0 +1,10 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: pr2_description
+    relative_path: robots/pr2.urdf.xacro
+  SRDF:
+    relative_path: config/pr2.srdf
+  CONFIG:
+    author_name: Bart van Vliet
+    author_email: bart.van.vliet@alten.nl
+    generated_timestamp: 1489659135

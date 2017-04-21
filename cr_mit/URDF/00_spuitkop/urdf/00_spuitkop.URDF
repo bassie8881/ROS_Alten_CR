@@ -19,8 +19,8 @@
     </inertial>
     <visual>
       <origin
-        xyz="1.5707963267949 0 0"
-        rpy="0 0 0" />
+        xyz="0.2 0 0"
+        rpy="1.5707963267949 0 -1.5707963267949" />
       <geometry>
         <mesh
           filename="package://cr_mit/URDF/00_spuitkop/meshes/00_spuitkop.STL" />
