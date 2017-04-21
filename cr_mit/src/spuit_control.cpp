@@ -3,7 +3,31 @@
 #include <tf/transform_datatypes.h>
 #include <sensor_msgs/JointState.h>
 #include <geometry_msgs/PoseStamped.h>
+#include <math.h>
 
+struct frames{
+    double angleR_spuit {0};
+    double angleP_spuit {0};
+    double angleY_spuit {0};
+    double disX_spuit = {0};
+    double disY_spuit = {0};
+    double disZ_spuit = {0};
+    double angleR_head = {0};
+    double angleP_head = {0};
+    double angleY_head = {0};
+    double disX_head = {0};
+    double disY_head = {0};
+    double disZ_head = {0};
+    double angleR_base = {0};
+    double angleP_base = {0};
+    double angleY_base = {0};
+    double disX_base = {0};
+    double disY_base = {0};
+    double disZ_base = {0};
+};
+
+frames nozzle_frames;
+/*
 double angleR_spuit = 0;
 double angleP_spuit = 0;
 double angleY_spuit = 0;
@@ -22,7 +46,7 @@ double angleY_base = 0;
 double disX_base = 0;
 double disY_base = 0;
 double disZ_base = 0;
-
+*/
 double time_interval = 4;
 double const_ = 101;
 
@@ -30,6 +54,11 @@ tf::Quaternion q1, q2, q3;
 
 ros::Publisher pos, fix_obj, base, head;
 geometry_msgs::TransformStamped odom, fixed_object, spuit_base, spuit_head;
+
+double degrees_to_radian(double deg){
+    double ans = (deg * (M_PI/180));
+    return ans;
+}
 
 void tf_Transform(geometry_msgs::TransformStamped msg){
     static tf::TransformBroadcaster transformer;
@@ -40,10 +69,10 @@ void spuit_geometry_Transform(){
     odom.header.stamp = ros::Time::now();
     odom.header.frame_id = "00_head";
     odom.child_frame_id = "00_spuitkop";
-    odom.transform.translation.x = disX_spuit;
-    odom.transform.translation.y = disY_spuit;
-    odom.transform.translation.z = disZ_spuit;
-    q1 = tf::createQuaternionFromRPY(angleP_spuit, angleR_spuit, angleY_spuit);
+    odom.transform.translation.x = nozzle_frames.disX_spuit;
+    odom.transform.translation.y = nozzle_frames.disY_spuit;
+    odom.transform.translation.z = nozzle_frames.disZ_spuit;
+    q1 = tf::createQuaternionFromRPY(nozzle_frames.angleP_spuit, nozzle_frames.angleR_spuit, nozzle_frames.angleY_spuit);
     odom.transform.rotation.x = q1[0];
     odom.transform.rotation.y = q1[1];
     odom.transform.rotation.z = q1[2];
@@ -56,10 +85,10 @@ void head_geometry_Transform(){
     spuit_head.header.stamp = ros::Time::now();
     spuit_head.header.frame_id = "00_base";
     spuit_head.child_frame_id = "00_head";
-    spuit_head.transform.translation.x = disX_head;
-    spuit_head.transform.translation.y = disY_head;
-    spuit_head.transform.translation.z = disZ_head;
-    q3 = tf::createQuaternionFromRPY(angleP_head, angleR_head, angleY_head);
+    spuit_head.transform.translation.x = nozzle_frames.disX_head;
+    spuit_head.transform.translation.y = nozzle_frames.disY_head;
+    spuit_head.transform.translation.z = nozzle_frames.disZ_head;
+    q3 = tf::createQuaternionFromRPY(nozzle_frames.angleP_head, nozzle_frames.angleR_head, nozzle_frames.angleY_head);
     spuit_head.transform.rotation.x = q3[0];
     spuit_head.transform.rotation.y = q3[1];
     spuit_head.transform.rotation.z = q3[2];
@@ -72,10 +101,10 @@ void base_geometry_Transform(){
     spuit_base.header.stamp = ros::Time::now();
     spuit_base.header.frame_id = "map";
     spuit_base.child_frame_id = "00_base";
-    spuit_base.transform.translation.x = disX_base;
-    spuit_base.transform.translation.y = disY_base;
-    spuit_base.transform.translation.z = disZ_base;
-    q2 = tf::createQuaternionFromRPY(angleP_base, angleR_base, angleY_base);
+    spuit_base.transform.translation.x = nozzle_frames.disX_base;
+    spuit_base.transform.translation.y = nozzle_frames.disY_base;
+    spuit_base.transform.translation.z = nozzle_frames.disZ_base;
+    q2 = tf::createQuaternionFromRPY(nozzle_frames.angleP_base, nozzle_frames.angleR_base, nozzle_frames.angleY_base);
     spuit_base.transform.rotation.x = q2[0];
     spuit_base.transform.rotation.y = q2[1];
     spuit_base.transform.rotation.z = q2[2];
@@ -116,7 +145,7 @@ int main(int argc, char **argv){
 
         double value_z_pos = 0.04;
         for(int i=0;i!=const_;i++){
-            disZ_spuit = (value_z_pos/const_)*i;
+            nozzle_frames.disZ_spuit = (value_z_pos/const_)*i;
             spuit_geometry_Transform();
             object_geometry_Transform();
             base_geometry_Transform();
@@ -124,9 +153,9 @@ int main(int argc, char **argv){
             ros::Duration(time_interval/const_).sleep();
         }
 
-        double value_R_angle = 0.2;
+        double value_R_angle = degrees_to_radian(10);
         for(int i=0;i!=const_;i++){
-            angleR_head = -(value_R_angle/const_)*i;
+            nozzle_frames.angleR_head = -(value_R_angle/const_)*i;
             spuit_geometry_Transform();
             object_geometry_Transform();
             base_geometry_Transform();
@@ -134,9 +163,9 @@ int main(int argc, char **argv){
             ros::Duration(time_interval/const_).sleep();
         }
 
-        double value_P_angle = 1;
+        double value_P_angle = degrees_to_radian(360);
         for(int i=0; i!=const_; i++){
-            angleP_base = angleP_base + (value_P_angle/const_);
+            nozzle_frames.angleP_base = nozzle_frames.angleP_base + (value_P_angle/const_);
             spuit_geometry_Transform();
             object_geometry_Transform();
             base_geometry_Transform();
