@@ -6,47 +6,29 @@
 #include <math.h>
 
 struct frames{
-    double angleR_spuit {0};
-    double angleP_spuit {0};
-    double angleY_spuit {0};
-    double disX_spuit = {0};
-    double disY_spuit = {0};
-    double disZ_spuit = {0};
-    double angleR_head = {0};
-    double angleP_head = {0};
-    double angleY_head = {0};
-    double disX_head = {0};
-    double disY_head = {0};
-    double disZ_head = {0};
-    double angleR_base = {0};
-    double angleP_base = {0};
-    double angleY_base = {0};
-    double disX_base = {0};
-    double disY_base = {0};
-    double disZ_base = {0};
+    double angleR_spuit;
+    double angleP_spuit;
+    double angleY_spuit;
+    double disX_spuit;
+    double disY_spuit;
+    double disZ_spuit;
+    double angleR_head;
+    double angleP_head;
+    double angleY_head;
+    double disX_head;
+    double disY_head;
+    double disZ_head;
+    double angleR_base;
+    double angleP_base;
+    double angleY_base;
+    double disX_base;
+    double disY_base;
+    double disZ_base;
 };
 
 frames nozzle_frames;
-/*
-double angleR_spuit = 0;
-double angleP_spuit = 0;
-double angleY_spuit = 0;
-double disX_spuit = 0;
-double disY_spuit = 0;
-double disZ_spuit = 0;
-double angleR_head = 0;
-double angleP_head = 0;
-double angleY_head = 0;
-double disX_head = 0;
-double disY_head = 0;
-double disZ_head = 0;
-double angleR_base = 0;
-double angleP_base = 0;
-double angleY_base = 0;
-double disX_base = 0;
-double disY_base = 0;
-double disZ_base = 0;
-*/
+frames empty_instance;
+
 double time_interval = 4;
 double const_ = 101;
 
@@ -143,18 +125,12 @@ int main(int argc, char **argv){
         base_geometry_Transform();
         head_geometry_Transform();
 
-        double value_z_pos = 0.04;
-        for(int i=0;i!=const_;i++){
-            nozzle_frames.disZ_spuit = (value_z_pos/const_)*i;
-            spuit_geometry_Transform();
-            object_geometry_Transform();
-            base_geometry_Transform();
-            head_geometry_Transform();
-            ros::Duration(time_interval/const_).sleep();
-        }
+        nozzle_frames = empty_instance;
 
+        double value_z_pos = 0.04;
         double value_R_angle = degrees_to_radian(10);
         for(int i=0;i!=const_;i++){
+            nozzle_frames.disZ_spuit = (value_z_pos/const_)*i;
             nozzle_frames.angleR_head = -(value_R_angle/const_)*i;
             spuit_geometry_Transform();
             object_geometry_Transform();
@@ -162,15 +138,61 @@ int main(int argc, char **argv){
             head_geometry_Transform();
             ros::Duration(time_interval/const_).sleep();
         }
-
         double value_P_angle = degrees_to_radian(360);
-        for(int i=0; i!=const_; i++){
-            nozzle_frames.angleP_base = nozzle_frames.angleP_base + (value_P_angle/const_);
+        for(int i=0; i!=(const_*3); i++){
+            nozzle_frames.angleP_base = nozzle_frames.angleP_base + (value_P_angle/(const_*3));
+            spuit_geometry_Transform();
+            object_geometry_Transform();
+            base_geometry_Transform();
+            head_geometry_Transform();
+            ros::Duration((time_interval*3)/(const_*3)).sleep();
+        }
+        for(int i=0; i!=const_;i++){
+            nozzle_frames.angleR_head = nozzle_frames.angleR_head + (value_R_angle/const_);
+            nozzle_frames.disZ_spuit = nozzle_frames.disZ_spuit - (value_z_pos/const_);
             spuit_geometry_Transform();
             object_geometry_Transform();
             base_geometry_Transform();
             head_geometry_Transform();
             ros::Duration(time_interval/const_).sleep();
+        }
+        double value_x_pos = 0.12;
+        for(int i=0;i!=const_;i++){
+            nozzle_frames.disX_head = nozzle_frames.disX_head - (value_x_pos/const_);
+            spuit_geometry_Transform();
+            object_geometry_Transform();
+            base_geometry_Transform();
+            head_geometry_Transform();
+            ros::Duration((time_interval*1.5)/const_).sleep();
+        }
+        double value_Y_angle_spuit = degrees_to_radian(9);
+        double value_Y_pos_spuit = 0.02;
+        for(int i=0;i!=const_;i++){
+            nozzle_frames.angleY_spuit = nozzle_frames.angleY_spuit + (value_Y_angle_spuit/const_);
+            nozzle_frames.disY_head = nozzle_frames.disY_head - (value_Y_pos_spuit/const_);
+            spuit_geometry_Transform();
+            object_geometry_Transform();
+            base_geometry_Transform();
+            head_geometry_Transform();
+            ros::Duration(time_interval/const_).sleep();
+        }
+        double value_P_angle_base = degrees_to_radian(360);
+        for(int i=0;i!=(const_*3);i++){
+            nozzle_frames.angleP_base = nozzle_frames.angleP_base + (value_P_angle_base/(const_*3));
+            spuit_geometry_Transform();
+            object_geometry_Transform();
+            base_geometry_Transform();
+            head_geometry_Transform();
+            ros::Duration((time_interval*3)/(const_*3)).sleep();
+        }
+        for(int i=0;i!=(const_*3*10);i++){
+            nozzle_frames.angleP_base = nozzle_frames.angleP_base + (value_P_angle_base/(const_*3));
+            nozzle_frames.disX_head = nozzle_frames.disX_head + (value_x_pos/(const_*3*10));
+            spuit_geometry_Transform();
+            object_geometry_Transform();
+            base_geometry_Transform();
+            head_geometry_Transform();
+            ros::Duration((time_interval*3*10)/(const_*3*10)).sleep();
         }
     }
     return 0;
