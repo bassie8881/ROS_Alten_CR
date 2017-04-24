@@ -19,15 +19,17 @@
     <visual>
       <origin
         xyz="0 0 0"
-        rpy="1.5707963267949 0 -1.5707963267949" />
+        rpy="1.5707963267949 0 1.5707963267949" />
       <geometry>
         <mesh
           filename="package://cr_mit/URDF/90elbow/meshes/90elbow.STL" />
       </geometry>
       <material
         name="">
-        <color
-          rgba="0.7451 0.7451 0.7451 1" />
+	<color
+          rgba="1 1 1 1" />
+        <!--color
+          rgba="0.7451 0.7451 0.7451 1" -->
       </material>
     </visual>
     <collision>

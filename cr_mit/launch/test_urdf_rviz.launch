@@ -7,12 +7,8 @@
   <!-- Run RViz -->
   <node name="rviz" pkg="rviz" type="rviz" required="true" args="-d $(find cr_mit)/config/rviz/cr_test_urdf.rviz" />
 
+  <!-- Run algorithms -->
   <node pkg="cr_mit" type="marker_viz" name="Marker_visualisation" output="screen" />
   <node pkg="cr_mit" type="spuit_control" name="Spuit_control_visualisation" output="screen"/>
-
-<!-- Run tf -->
-  <!--node pkg="tf" type="static_transform_publisher" name="elbow_map" args="0 0 0 0 0 0 /90elbow /map 40" >
-  <node pkg="tf" type="static_transform_publisher" name="spuit_map" args="0.0 0 0 0.0 0.0 0.0 /00_spuit /map 40" -->
-
 
 </launch>

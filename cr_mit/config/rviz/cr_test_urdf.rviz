@@ -60,7 +60,7 @@ Visualization Manager:
         00_spuitkop:
           Alpha: 1
           Show Axes: true
-          Show Trail: true
+          Show Trail: false
           Value: true
         All Links Enabled: true
         Expand Joint Details: false
@@ -108,6 +108,14 @@ Visualization Manager:
         {}
       Update Interval: 0
       Value: false
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: visualization_marker
+      Name: Marker
+      Namespaces:
+        points_and_lines: true
+      Queue Size: 100
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 191; 191; 191
@@ -132,22 +140,22 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/XYOrbit
-      Distance: 0.432075
+      Distance: 0.448853
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.06
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.0781285
-        Y: -0.10049
-        Z: -1.31643e-05
+        X: 0.0739283
+        Y: -0.109161
+        Z: -1.31047e-05
       Name: Current View
       Near Clip Distance: 0.01
-      Pitch: 0.479796
+      Pitch: 0.569796
       Target Frame: <Fixed Frame>
       Value: XYOrbit (rviz)
-      Yaw: 5.44852
+      Yaw: 5.32352
     Saved: ~
 Window Geometry:
   Displays:
