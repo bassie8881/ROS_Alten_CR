@@ -32,3 +32,8 @@ target_link_libraries(spuit_control
    ${catkin_LIBRARIES})
 add_dependencies(spuit_control ${${cr_mit}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
+add_executable(surface_visualisation src/surface_visualisation.cpp)
+target_link_libraries(surface_visualisation
+   ${catkin_LIBRARIES})
+add_dependencies(surface_visualisation ${${cr_mit}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+

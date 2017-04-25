@@ -1,0 +1,12 @@
+<launch>
+  <master auto="start"/>
+  <param name="/use_sim_time" value="false"/>
+  <param name="elbow_description" textfile="$(find cr_mit)/URDF/90elbow/urdf/90elbow.URDF"/>
+
+  <!-- Run RViz -->
+  <node name="rviz" pkg="rviz" type="rviz" required="true" args="-d $(find cr_mit)/config/rviz/surface_visualisation.rviz" />
+
+  <!-- Run algorithms -->
+  <node pkg="cr_mit" type="surface_visualisation" name="Surface_visualisation" output="screen"/>
+
+</launch>
