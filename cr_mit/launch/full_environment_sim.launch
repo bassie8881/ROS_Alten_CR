@@ -1,0 +1,14 @@
+<launch>
+  <master auto="start"/>
+  <param name="/use_sim_time" value="false"/>
+  <param name="robot_description" textfile="$(find cr_mit)/URDF/00_spuitkop/urdf/00_spuitkop.URDF"/>
+
+  <!-- Run RViz -->
+  <node name="rviz" pkg="rviz" type="rviz" required="true" args="-d $(find cr_mit)/config/rviz/full_environment_sim.rviz" />
+
+  <!-- Run algorithms -->
+  <node pkg="cr_mit" type="surface_visualisation" name="Surface_visualisation" output="screen"/>
+  <node pkg="cr_mit" type="spuit_control" name="Spuit_control_visualisation" output="screen"/>
+  <node pkg="cr_mit" type="clean_state" name="Cleaned_surface_determination" output="screen"/>
+
+</launch>

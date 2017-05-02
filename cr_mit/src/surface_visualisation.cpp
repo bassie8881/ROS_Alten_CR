@@ -164,10 +164,27 @@ struct ans{
 
 float bend_radius_tube = 0.15;
 float tube_diameter = 0.025;
+
 struct ans answ;
 
-ros::Publisher fix_obj;
-geometry_msgs::TransformStamped fixed_object;
+double wws_radius = 0.02;
+
+int count = 0;
+int count2 = 0;
+double num_points_1 = 100;
+double num_points_2 = 200;
+double num_points_3 = 100;
+double num_points_4 = 40;
+double dist_4 = 0.04;
+unsigned int num_points = 30000;
+
+int wws_count = 0;
+double wws_points_1 = 50;
+double wws_points_2 = 50;
+unsigned int wws_num_points = 3000;
+
+ros::Publisher fix_obj, water_workspace;
+geometry_msgs::TransformStamped fixed_object, wws;
 
 
 void transform_rotation(double angle, double x_point, double y_point){
@@ -196,18 +213,31 @@ void object_geometry_Transform(){
     tf_Transform(fixed_object);
 }
 
+void water_workspace_Transform(){
+    wws.header.stamp = ros::Time::now();
+    wws.header.frame_id = "00_spuitkop";
+    wws.child_frame_id = "water_workspace";
+    wws.transform.translation.x = 0.0;
+    wws.transform.translation.y = 0.0;
+    wws.transform.translation.z = 0.0;
+    wws.transform.rotation.x = 0.0;
+    wws.transform.rotation.y = 0.0;
+    wws.transform.rotation.z = 0.0;
+    wws.transform.rotation.w = 1.0;
+    water_workspace.publish(wws);
+    tf_Transform(wws);
+}
+
 int main(int argc, char** argv){
-  ros::init(argc, argv, "surface_visualisation");
+  ros::init(argc, argv, "visualisation");
 
   ros::NodeHandle n;
-  ros::Publisher cloud_pub = n.advertise<sensor_msgs::PointCloud>("cloud", 10);
-  fix_obj = n.advertise<geometry_msgs::TransformStamped>("/surface_visualisation",1);
-  int count = 0;
-  double num_points_1 = 100;
-  double num_points_2 = 200;
-  unsigned int num_points = 21000;
+  ros::Publisher cloud_pub_surface = n.advertise<sensor_msgs::PointCloud>("/surface_cloud", 10);
+  ros::Publisher cloud_pub_wws = n.advertise<sensor_msgs::PointCloud>("/water_wss_cloud", 10);
+  fix_obj = n.advertise<geometry_msgs::TransformStamped>("/surface_visualisation_base",1);
+  water_workspace = n.advertise<geometry_msgs::TransformStamped>("/water_workspace_base",1);
 
-  sensor_msgs::PointCloud cloud;
+  sensor_msgs::PointCloud cloud, wws_cloud;
   cloud.header.stamp = ros::Time::now();
   cloud.header.frame_id = "inner_surface";
 
@@ -217,6 +247,14 @@ int main(int argc, char** argv){
   cloud.channels[0].name = "intensities";
   cloud.channels[0].values.resize(num_points);
 
+  wws_cloud.header.stamp = ros::Time::now();
+  wws_cloud.header.frame_id = "water_workspace";
+
+  wws_cloud.points.resize(wws_num_points);
+
+  wws_cloud.channels.resize(1);
+  wws_cloud.channels[0].name = "intensities";
+  wws_cloud.channels[0].values.resize(wws_num_points);
 
   for (uint32_t i = 0; i < num_points_1; ++i){
       cloud.points[i + (count*num_points_2)].x = 0;
@@ -234,14 +272,55 @@ int main(int argc, char** argv){
       }
       count = count + 1;
   }
+  for (uint32_t k = 0; k < num_points_3; ++k){
+      cloud.points[k + ((count*num_points_2)+(count2*num_points_4)+num_points_1)].x = 0;
+      cloud.points[k + ((count*num_points_2)+(count2*num_points_4)+num_points_1)].y = (tube_diameter*cos(k / num_points_3 * 2 * M_PI)) + bend_radius_tube;
+      cloud.points[k + ((count*num_points_2)+(count2*num_points_4)+num_points_1)].z = tube_diameter*sin(k / num_points_3 * 2 * M_PI);
+
+      for (uint32_t l = 0; l < num_points_4; ++l){
+          double distance = ((l / num_points_4) * dist_4);
+          cloud.points[k + ((count*num_points_2)+(count2*num_points_4)+num_points_1)+l].x = distance;
+          cloud.points[k + ((count*num_points_2)+(count2*num_points_4)+num_points_1)+l].y = (tube_diameter*cos(k / num_points_3 * 2 * M_PI)) + bend_radius_tube;
+          cloud.points[k + ((count*num_points_2)+(count2*num_points_4)+num_points_1)+l].z = tube_diameter*sin(k / num_points_3 * 2 * M_PI);
+      }
+      count2 = count2 + 1;
+  }
   count = 0;
+  count2 = 0;
+
+  for (uint32_t i = 0; i < wws_points_1; ++i){
+      wws_cloud.points[i + (wws_count*wws_points_2)].x = 0;
+      wws_cloud.points[i + (wws_count*wws_points_2)].y = wws_radius*cos(i / wws_points_1 * 2 * M_PI);
+      wws_cloud.points[i + (wws_count*wws_points_2)].z = wws_radius*sin(i / wws_points_1 * 2 * M_PI);
+
+      for (uint32_t j = 0; j < wws_points_2; ++j){
+          double angle = (j / wws_points_2 * M_PI);
+          transform_rotation(angle, wws_cloud.points[i + (wws_count*wws_points_2)].y, wws_cloud.points[i + (wws_count*wws_points_2)].z);
+          wws_cloud.points[(i + (wws_count*wws_points_2))+j].y = answ.x;
+          wws_cloud.points[(i + (wws_count*wws_points_2))+j].x = answ.z;
+          wws_cloud.points[(i + (wws_count*wws_points_2))+j].z = answ.y;
+
+          wws_cloud.channels[0].values[(i + (wws_count*wws_points_2))+j] = 20;
+      }
+      wws_count = wws_count + 1;
+  }
+
+  object_geometry_Transform();
+  water_workspace_Transform();
+  cloud_pub_surface.publish(cloud);
+  cloud_pub_wws.publish(wws_cloud);
 
   ros::Rate r(10.0);
   while(ros::ok()){
 
     cloud.header.stamp = ros::Time::now();
-    cloud_pub.publish(cloud);
+    cloud_pub_surface.publish(cloud);
+
+    wws_cloud.header.stamp = ros::Time::now();
+    cloud_pub_wws.publish(wws_cloud);
+
     object_geometry_Transform();
+    water_workspace_Transform();
     r.sleep();
 
   }

@@ -5,6 +5,7 @@ find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
   roscpp
   rospy
+  sensor_msgs
   std_msgs
   visualization_msgs
   tf
@@ -36,4 +37,9 @@ add_executable(surface_visualisation src/surface_visualisation.cpp)
 target_link_libraries(surface_visualisation
    ${catkin_LIBRARIES})
 add_dependencies(surface_visualisation ${${cr_mit}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
+add_executable(clean_state src/clean_state.cpp)
+target_link_libraries(clean_state
+   ${catkin_LIBRARIES})
+add_dependencies(clean_state ${${cr_mit}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
