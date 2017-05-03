@@ -185,7 +185,20 @@ unsigned int wws_num_points = 3000;
 
 ros::Publisher fix_obj, water_workspace;
 geometry_msgs::TransformStamped fixed_object, wws;
+sensor_msgs::PointCloud cleaned_surface, cloud, wws_cloud;
 
+void updateCleanedSurface(){
+    for(size_t i=0; i<cloud.points.size(); ++i){
+        if(cleaned_surface.points[i].x !=0 || cleaned_surface.points[i].y !=0 || cleaned_surface.points[i].z !=0){
+            cloud.points[i] = cleaned_surface.points[i];
+            cloud.channels[0].values[i] = cleaned_surface.channels[0].values[i];
+        }
+    }
+}
+
+void cleanedSurfaceCallback(const sensor_msgs::PointCloud& msg){
+    cleaned_surface = msg;
+}
 
 void transform_rotation(double angle, double x_point, double y_point){
     answ.x = (cos(angle)*x_point);
@@ -236,8 +249,8 @@ int main(int argc, char** argv){
   ros::Publisher cloud_pub_wws = n.advertise<sensor_msgs::PointCloud>("/water_wss_cloud", 10);
   fix_obj = n.advertise<geometry_msgs::TransformStamped>("/surface_visualisation_base",1);
   water_workspace = n.advertise<geometry_msgs::TransformStamped>("/water_workspace_base",1);
+  ros::Subscriber sub_cleaned_surface = n.subscribe("/cleaned_surface", 10, cleanedSurfaceCallback);
 
-  sensor_msgs::PointCloud cloud, wws_cloud;
   cloud.header.stamp = ros::Time::now();
   cloud.header.frame_id = "inner_surface";
 
@@ -312,16 +325,19 @@ int main(int argc, char** argv){
 
   ros::Rate r(10.0);
   while(ros::ok()){
+      ros::spinOnce();
+      if(!cleaned_surface.points.empty()){
+          updateCleanedSurface();
+      }
+      cloud.header.stamp = ros::Time::now();
+      cloud_pub_surface.publish(cloud);
 
-    cloud.header.stamp = ros::Time::now();
-    cloud_pub_surface.publish(cloud);
+      wws_cloud.header.stamp = ros::Time::now();
+      cloud_pub_wws.publish(wws_cloud);
 
-    wws_cloud.header.stamp = ros::Time::now();
-    cloud_pub_wws.publish(wws_cloud);
-
-    object_geometry_Transform();
-    water_workspace_Transform();
-    r.sleep();
+      object_geometry_Transform();
+      water_workspace_Transform();
+      r.sleep();
 
   }
 }
