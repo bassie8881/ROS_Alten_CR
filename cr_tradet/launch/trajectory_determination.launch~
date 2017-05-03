@@ -1,0 +1,13 @@
+<launch>
+  <master auto="start"/>
+  <param name="/use_sim_time" value="false"/>
+
+  <!-- Run RViz -->
+  <node name="rviz" pkg="rviz" type="rviz" required="true" args="-d $(find cr_tradet)/config/rviz/tradet.rviz" />
+
+  <!-- Run algorithms -->
+  <node pkg="cr_tradet" type="surface_visualisation" name="Surface_visualisation" output="screen"/>
+  <node pkg="cr_tradet" type="spuit_control" name="Spuit_control_visualisation" output="screen"/>
+  <node pkg="cr_tradet" type="clean_state" name="Cleaned_surface_determination" output="screen"/>
+
+</launch>

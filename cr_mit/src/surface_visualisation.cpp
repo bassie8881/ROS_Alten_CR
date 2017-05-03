@@ -249,7 +249,7 @@ int main(int argc, char** argv){
   ros::Publisher cloud_pub_wws = n.advertise<sensor_msgs::PointCloud>("/water_wss_cloud", 10);
   fix_obj = n.advertise<geometry_msgs::TransformStamped>("/surface_visualisation_base",1);
   water_workspace = n.advertise<geometry_msgs::TransformStamped>("/water_workspace_base",1);
-  ros::Subscriber sub_cleaned_surface = n.subscribe("/cleaned_surface", 10, cleanedSurfaceCallback);
+  ros::Subscriber sub_cleaned_surface = n.subscribe("/cleaned_surface", 1, cleanedSurfaceCallback);
 
   cloud.header.stamp = ros::Time::now();
   cloud.header.frame_id = "inner_surface";

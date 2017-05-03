@@ -1,0 +1,31 @@
+cmake_minimum_required(VERSION 2.8.3)
+project(cr_tradet)
+
+find_package(catkin REQUIRED COMPONENTS
+  geometry_msgs
+  roscpp
+  rospy
+  sensor_msgs
+  std_msgs
+  tf
+  visualization_msgs
+)
+
+catkin_package(
+)
+
+include_directories(
+  ${catkin_INCLUDE_DIRS}
+)
+
+add_executable(object_visualisation src/object_visualisation.cpp)
+target_link_libraries(object_visualisation
+   ${catkin_LIBRARIES})
+add_dependencies(object_visualisation ${${cr_tradet}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
+find_package (PCL REQUIRED)
+
+include_directories(${PCL_INCLUDE_DIRS}) 
+
+
+
