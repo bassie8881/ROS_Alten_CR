@@ -266,9 +266,11 @@ void tubeDataGeneration(){
     tube_obj_cloud.header.stamp = ros::Time::now();
     tube_obj_cloud.header.frame_id = "tube_surface_frame";
     tube_obj_cloud.points.resize(tube_num_points);
-    tube_obj_cloud.channels.resize(1);
+    tube_obj_cloud.channels.resize(2);
     tube_obj_cloud.channels[0].name = "intensities";
-    tube_obj_cloud.channels[0].values.resize(tube_num_points);
+    tube_obj_cloud.channels[0].values.resize(tube_num_points);  
+    tube_obj_cloud.channels[1].name = "AxisColor";
+    tube_obj_cloud.channels[1].values.resize(tube_num_points);
 
     for (uint32_t i = 0; i < num_points_1; ++i){
         tube_obj_cloud.points[i + (tube_count_1*num_points_2)].x = 0;
@@ -281,6 +283,8 @@ void tubeDataGeneration(){
             tube_obj_cloud.points[(i + (tube_count_1*num_points_2))+j].y = answ.x;
             tube_obj_cloud.points[(i + (tube_count_1*num_points_2))+j].x = answ.z;
             tube_obj_cloud.points[(i + (tube_count_1*num_points_2))+j].z = answ.y;
+
+            tube_obj_cloud.channels[1].values[(i + (tube_count_1*num_points_2))+j] = 200;
 
         }
         tube_count_1 = tube_count_1 + 1;
