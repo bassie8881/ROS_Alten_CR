@@ -253,8 +253,11 @@ double num_points_1 = 100;
 double num_points_2 = 200;
 double num_points_3 = 100;
 double num_points_4 = 40;
+double num_points_5 = 100;
+double num_points_6 = 40;
 double dist_4 = 0.04;
-unsigned int num_points = 30000;
+double dist_6 = 0.04;
+unsigned int num_points = 35000;
 
 int wws_count = 0;
 double wws_points_1 = 50;
@@ -268,10 +271,28 @@ double pub_interval = 10;
 double cleaned_percentage = 0;
 
 bool flip_cloud = false;
+bool DO = true;
+bool discart_update = false;
+ros::Time cancel_update;
 
 ros::Publisher fix_obj, water_workspace;
 geometry_msgs::TransformStamped fixed_object, wws;
-sensor_msgs::PointCloud cleaned_surface, cloud, wws_cloud;
+sensor_msgs::PointCloud cleaned_surface, cloud, trans_cloud, wws_cloud;
+
+void cleanedSurfaceCallback(const sensor_msgs::PointCloud& msg){
+    cleaned_surface = msg;
+}
+
+void transform_rotation(double angle, double x_point, double y_point){
+    answ.x = (cos(angle)*x_point);
+    answ.y = y_point;
+    answ.z = (sin(-angle)*x_point);
+}
+
+void tf_Transform(geometry_msgs::TransformStamped msg){
+    static tf::TransformBroadcaster transformer;
+    transformer.sendTransform(msg);
+}
 
 double degrees_to_radian(double deg){
     double ans = (deg * (M_PI/180));
@@ -307,19 +328,46 @@ void updateCleanedSurface(){
     }
 }
 
-void cleanedSurfaceCallback(const sensor_msgs::PointCloud& msg){
-    cleaned_surface = msg;
-}
+void transformDataCloud(){
+    trans_cloud.points.resize(num_points);
 
-void transform_rotation(double angle, double x_point, double y_point){
-    answ.x = (cos(angle)*x_point);
-    answ.y = y_point;
-    answ.z = (sin(-angle)*x_point);
-}
+    trans_cloud.channels.resize(1);
+    trans_cloud.channels[0].name = "intensities";
+    trans_cloud.channels[0].values.resize(num_points);
 
-void tf_Transform(geometry_msgs::TransformStamped msg){
-    static tf::TransformBroadcaster transformer;
-    transformer.sendTransform(msg);
+    for (uint32_t i = 0; i < num_points_1; ++i){
+        trans_cloud.points[i + (count*num_points_2)].x = 0;
+        trans_cloud.points[i + (count*num_points_2)].y = (tube_diameter*cos((i / num_points_1 * 2 * M_PI) + M_PI)) - bend_radius_tube;
+        trans_cloud.points[i + (count*num_points_2)].z = tube_diameter*sin((i / num_points_1 * 2 * M_PI) + M_PI);
+
+        for (uint32_t j = 0; j < num_points_2; ++j){
+            double angle = -(j / num_points_2 * 0.5 * M_PI);
+            transform_rotation(angle, trans_cloud.points[i + (count*num_points_2)].y, trans_cloud.points[i + (count*num_points_2)].z);
+            trans_cloud.points[(i + (count*num_points_2))+j].y = answ.x;
+            trans_cloud.points[(i + (count*num_points_2))+j].x = answ.z;
+            trans_cloud.points[(i + (count*num_points_2))+j].z = answ.y;
+            trans_cloud.channels[0].values[(i + (count*num_points_2))+j] = cloud.channels[0].values[(i + (count*num_points_2)+num_points_2)-j];
+        }
+        count = count + 1;
+    }
+    for (uint32_t k = 0; k < num_points_3; ++k){
+        trans_cloud.points[k + ((count*num_points_2)+(count2*num_points_4)+num_points_1)].x = (tube_diameter*cos((k / num_points_3 * 2 * M_PI) + M_PI)) - bend_radius_tube;
+        trans_cloud.points[k + ((count*num_points_2)+(count2*num_points_4)+num_points_1)].y = 0;
+        trans_cloud.points[k + ((count*num_points_2)+(count2*num_points_4)+num_points_1)].z = tube_diameter*sin((k / num_points_3 * 2 * M_PI) + M_PI);
+        trans_cloud.channels[0].values[k + ((count*num_points_2)+(count2*num_points_4)+num_points_1)] = cloud.channels[0].values[k + ((count*num_points_2)+(count2*num_points_4)+num_points_1)];
+
+        for (uint32_t l = 0; l < num_points_4; ++l){
+            double distance = ((l / num_points_4) * dist_4);
+            trans_cloud.points[k + ((count*num_points_2)+(count2*num_points_4)+num_points_1)+l].x = (tube_diameter*cos((k / num_points_3 * 2 * M_PI) + M_PI)) - bend_radius_tube;
+            trans_cloud.points[k + ((count*num_points_2)+(count2*num_points_4)+num_points_1)+l].y = distance;
+            trans_cloud.points[k + ((count*num_points_2)+(count2*num_points_4)+num_points_1)+l].z = tube_diameter*sin((k / num_points_3 * 2 * M_PI) + M_PI);
+            trans_cloud.channels[0].values[k + ((count*num_points_2)+(count2*num_points_4)+num_points_1+num_points_4)-l] = cloud.channels[0].values[k + ((count*num_points_2)+(count2*num_points_4)+num_points_1+num_points_4)-l];
+        }
+        count2 = count2 + 1;
+    }
+    cloud.points = trans_cloud.points; cloud.channels[0].values = trans_cloud.channels[0].values;
+    count = 0;
+    count2 = 0;
 }
 
 void object_geometry_Transform(){
@@ -344,12 +392,10 @@ void fliped_cloud_geometry_Transform(){
     fixed_object.transform.translation.x = 0.0;
     fixed_object.transform.translation.y = bend_radius_tube;
     fixed_object.transform.translation.z = 0.0;
-    double angle = degrees_to_radian(90);
-    q = tf::createQuaternionFromRPY(0, 0, angle);
-    fixed_object.transform.rotation.x = q[0];
-    fixed_object.transform.rotation.y = q[1];
-    fixed_object.transform.rotation.z = q[2];
-    fixed_object.transform.rotation.w = q[3];
+    fixed_object.transform.rotation.x = 0.0;
+    fixed_object.transform.rotation.y = 0.0;
+    fixed_object.transform.rotation.z = 0.0;
+    fixed_object.transform.rotation.w = 1.0;
     fix_obj.publish(fixed_object);
     tf_Transform(fixed_object);
 }
@@ -378,7 +424,7 @@ int main(int argc, char** argv){
   fix_obj = n.advertise<geometry_msgs::TransformStamped>("/surface_visualisation_base",1);
   water_workspace = n.advertise<geometry_msgs::TransformStamped>("/water_workspace_base",1);
   ros::Subscriber sub_cleaned_surface = n.subscribe("/cleaned_surface", 1, cleanedSurfaceCallback);
-  ros::Subscriber<std_msgs::Empty> sub("/flip_cloud", &completedMessage);
+  ros::Subscriber empty_msgs = n.subscribe("/flip_cloud", 1, completedMessage);
 
   cloud.header.stamp = ros::Time::now();
   cloud.header.frame_id = "inner_surface";
@@ -427,6 +473,23 @@ int main(int argc, char** argv){
       }
       count2 = count2 + 1;
   }
+  /*
+    for (uint32_t m = 0; m < nozzle_points_f_1; ++m){
+        nozzle_cloud.points[m + ((nozzle_count_1*nozzle_points_t_2)+(nozzle_count_2*nozzle_points_b_2)+(nozzle_count_3*nozzle_points_f_2)+nozzle_points_t_1+nozzle_points_b_1)].x = nozzle_length;
+        nozzle_cloud.points[m + ((nozzle_count_1*nozzle_points_t_2)+(nozzle_count_2*nozzle_points_b_2)+(nozzle_count_3*nozzle_points_f_2)+nozzle_points_t_1+nozzle_points_b_1)].y = nozzle_radius*cos(m / nozzle_points_f_1 * 2 * M_PI);
+        nozzle_cloud.points[m + ((nozzle_count_1*nozzle_points_t_2)+(nozzle_count_2*nozzle_points_b_2)+(nozzle_count_3*nozzle_points_f_2)+nozzle_points_t_1+nozzle_points_b_1)].z = nozzle_radius*sin(m / nozzle_points_f_1 * 2 * M_PI);
+
+        for (uint32_t n = 0; n < nozzle_points_f_2; ++n){
+            double offset = ((n / nozzle_points_f_2) * nozzle_radius);
+            nozzle_cloud.points[m + ((nozzle_count_1*nozzle_points_t_2)+(nozzle_count_2*nozzle_points_b_2)+(nozzle_count_3*nozzle_points_f_2)+nozzle_points_t_1+nozzle_points_b_1)+n].x = nozzle_length;
+            nozzle_cloud.points[m + ((nozzle_count_1*nozzle_points_t_2)+(nozzle_count_2*nozzle_points_b_2)+(nozzle_count_3*nozzle_points_f_2)+nozzle_points_t_1+nozzle_points_b_1)+n].y = offset*cos(m / nozzle_points_f_1 * 2 * M_PI);
+            nozzle_cloud.points[m + ((nozzle_count_1*nozzle_points_t_2)+(nozzle_count_2*nozzle_points_b_2)+(nozzle_count_3*nozzle_points_f_2)+nozzle_points_t_1+nozzle_points_b_1)+n].z = offset*sin(m / nozzle_points_f_1 * 2 * M_PI);
+        }
+        nozzle_count_3 = nozzle_count_3 + 1;
+    }
+    */
+
+
   count = 0;
   count2 = 0;
 
@@ -457,14 +520,40 @@ int main(int argc, char** argv){
 
       ros::spinOnce();
 
-      if(!cleaned_surface.points.empty()){
+      if(flip_cloud == true){
+          if(DO ==true){
+              DO = false;
+              discart_update = true;
+              cancel_update = ros::Time::now();
+              transformDataCloud();
+              cloud.header.stamp = ros::Time::now();
+              cloud_pub_surface.publish(cloud);
+              ROS_INFO("Cloud updated");
+              fliped_cloud_geometry_Transform();
+              ros::Duration(0.5).sleep();
+              ros::spinOnce();
+          }
+          fliped_cloud_geometry_Transform();
+      }
+      else{
+          object_geometry_Transform();
+      }
+
+      duration = (ros::Time::now()-cancel_update).toSec();
+      if(duration >= 10.0){
+          discart_update = false;
+      }
+
+      if(!cleaned_surface.points.empty() && discart_update ==false){
           updateCleanedSurface();
       }
 
-      if(!cleaned_surface.points.empty()&& set_timer ==false){
+      if(!cleaned_surface.points.empty() && set_timer ==false && discart_update ==false){
           set_timer = true;
           timer = ros::Time::now();
       }
+
+      water_workspace_Transform();
 
       cloud.header.stamp = ros::Time::now();
       cloud_pub_surface.publish(cloud);
@@ -472,22 +561,12 @@ int main(int argc, char** argv){
       wws_cloud.header.stamp = ros::Time::now();
       cloud_pub_wws.publish(wws_cloud);
 
-      water_workspace_Transform();
-
-      if(flip_cloud == true){
-          fliped_cloud_geometry_Transform();
-      }
-      else{
-          object_geometry_Transform();
-      }
-
       duration = (ros::Time::now()-timer).toSec();
       if(set_timer == true && (duration >= pub_interval)){
           timer = ros::Time::now();
           cleaned_percentage = det_procentage_cleaned();
           ROS_INFO_STREAM("Percentage of surface cleaned = "<<cleaned_percentage);
       }
-
       r.sleep();
 
   }

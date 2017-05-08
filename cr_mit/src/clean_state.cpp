@@ -3,6 +3,7 @@
 #include <tf/transform_listener.h>
 #include <sensor_msgs/PointCloud.h>
 #include <math.h>
+#include <std_msgs/Empty.h>
 
 struct boundaries{
     double beg_x;
@@ -15,10 +16,15 @@ struct boundaries{
 
 struct boundaries bounds;
 bool DO = true;
+bool reload_data = false;
 double d = 0;
-sensor_msgs::PointCloud surface_cloud, workspace_cloud, surface_cloud_map, workspace_cloud_map, cleaned_surface;
+sensor_msgs::PointCloud surface_cloud, workspace_cloud, surface_cloud_map, workspace_cloud_map, cleaned_surface, empty_instance;
 tf::StampedTransform transform_wws, transform_surf;
 ros::Publisher pub_cleaned_surface;
+
+void completedMessage(const std_msgs::Empty& flip_cloud_msg){
+    reload_data = true;
+}
 
 void surfaceCallback(const sensor_msgs::PointCloud& msg){
     surface_cloud = msg;
@@ -88,13 +94,36 @@ int main(int argc, char **argv){
     ros::Subscriber sub_surface = nh.subscribe("/surface_cloud",1,surfaceCallback);
     ros::Subscriber sub_workspace = nh.subscribe("/water_wss_cloud",1,workspaceCallback);
     pub_cleaned_surface = nh.advertise<sensor_msgs::PointCloud>("/cleaned_surface", 10);
+    ros::Subscriber empty_msgs = nh.subscribe("/flip_cloud", 1, completedMessage);
 
     ros::Rate rate(10.0);
     ros::spinOnce();
 
     while(ros::ok()){
-
+        ros::spinOnce();
         if(!surface_cloud.points.empty()&&!workspace_cloud.points.empty()){
+            if(reload_data ==true){
+                reload_data = false;
+                ros::Duration(0.2).sleep();
+                cleaned_surface = empty_instance;
+                ros::spinOnce();
+                try{
+                    listener_surf.lookupTransform("/map", "/inner_surface", ros::Time(0), transform_surf);
+                }
+                catch (tf::TransformException &ex){
+                    ROS_WARN("%s", ex.what());
+                    ros::Duration(1.0).sleep();
+                }
+                for(size_t i=0; i<surface_cloud.points.size(); ++i){
+                    surface_cloud_map.points.resize(surface_cloud.points.size());
+                    surface_cloud_map.points[i].x = surface_cloud.points[i].x + transform_surf.getOrigin().x();
+                    surface_cloud_map.points[i].y = surface_cloud.points[i].y + transform_surf.getOrigin().y();
+                    surface_cloud_map.points[i].z = surface_cloud.points[i].z + transform_surf.getOrigin().z();
+                }
+                findBounds();
+                ROS_INFO("Data reloaded");
+            }
+
             if(DO == true){
                 try{
                     listener_surf.lookupTransform("/map", "/inner_surface", ros::Time(0), transform_surf);
