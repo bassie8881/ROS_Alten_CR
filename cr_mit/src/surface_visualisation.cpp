@@ -249,6 +249,7 @@ double wws_radius = 0.02;
 
 int count = 0;
 int count2 = 0;
+int count3 = 0;
 double num_points_1 = 100;
 double num_points_2 = 200;
 double num_points_3 = 100;
@@ -337,11 +338,11 @@ void transformDataCloud(){
 
     for (uint32_t i = 0; i < num_points_1; ++i){
         trans_cloud.points[i + (count*num_points_2)].x = 0;
-        trans_cloud.points[i + (count*num_points_2)].y = (tube_diameter*cos((i / num_points_1 * 2 * M_PI) + M_PI)) - bend_radius_tube;
-        trans_cloud.points[i + (count*num_points_2)].z = tube_diameter*sin((i / num_points_1 * 2 * M_PI) + M_PI);
+        trans_cloud.points[i + (count*num_points_2)].y = (tube_diameter*cos(i / num_points_1 * 2 * M_PI)) + bend_radius_tube;
+        trans_cloud.points[i + (count*num_points_2)].z = tube_diameter*sin(i / num_points_1 * 2 * M_PI);
 
         for (uint32_t j = 0; j < num_points_2; ++j){
-            double angle = -(j / num_points_2 * 0.5 * M_PI);
+            double angle = (j / num_points_2 * 0.5 * M_PI);
             transform_rotation(angle, trans_cloud.points[i + (count*num_points_2)].y, trans_cloud.points[i + (count*num_points_2)].z);
             trans_cloud.points[(i + (count*num_points_2))+j].y = answ.x;
             trans_cloud.points[(i + (count*num_points_2))+j].x = answ.z;
@@ -351,19 +352,34 @@ void transformDataCloud(){
         count = count + 1;
     }
     for (uint32_t k = 0; k < num_points_3; ++k){
-        trans_cloud.points[k + ((count*num_points_2)+(count2*num_points_4)+num_points_1)].x = (tube_diameter*cos((k / num_points_3 * 2 * M_PI) + M_PI)) - bend_radius_tube;
+        trans_cloud.points[k + ((count*num_points_2)+(count2*num_points_4)+num_points_1)].x = (tube_diameter*cos(k / num_points_3 * 2 * M_PI)) - bend_radius_tube;
         trans_cloud.points[k + ((count*num_points_2)+(count2*num_points_4)+num_points_1)].y = 0;
-        trans_cloud.points[k + ((count*num_points_2)+(count2*num_points_4)+num_points_1)].z = tube_diameter*sin((k / num_points_3 * 2 * M_PI) + M_PI);
+        trans_cloud.points[k + ((count*num_points_2)+(count2*num_points_4)+num_points_1)].z = tube_diameter*sin(k / num_points_3 * 2 * M_PI);
         trans_cloud.channels[0].values[k + ((count*num_points_2)+(count2*num_points_4)+num_points_1)] = cloud.channels[0].values[k + ((count*num_points_2)+(count2*num_points_4)+num_points_1)];
 
         for (uint32_t l = 0; l < num_points_4; ++l){
             double distance = ((l / num_points_4) * dist_4);
-            trans_cloud.points[k + ((count*num_points_2)+(count2*num_points_4)+num_points_1)+l].x = (tube_diameter*cos((k / num_points_3 * 2 * M_PI) + M_PI)) - bend_radius_tube;
-            trans_cloud.points[k + ((count*num_points_2)+(count2*num_points_4)+num_points_1)+l].y = distance;
-            trans_cloud.points[k + ((count*num_points_2)+(count2*num_points_4)+num_points_1)+l].z = tube_diameter*sin((k / num_points_3 * 2 * M_PI) + M_PI);
+            trans_cloud.points[k + ((count*num_points_2)+(count2*num_points_4)+num_points_1)+l].x = (tube_diameter*cos(k / num_points_3 * 2 * M_PI)) - bend_radius_tube;
+            trans_cloud.points[k + ((count*num_points_2)+(count2*num_points_4)+num_points_1)+l].y = -distance;
+            trans_cloud.points[k + ((count*num_points_2)+(count2*num_points_4)+num_points_1)+l].z = tube_diameter*sin(k / num_points_3 * 2 * M_PI);
             trans_cloud.channels[0].values[k + ((count*num_points_2)+(count2*num_points_4)+num_points_1+num_points_4)-l] = cloud.channels[0].values[k + ((count*num_points_2)+(count2*num_points_4)+num_points_1+num_points_4)-l];
         }
         count2 = count2 + 1;
+    }
+    for (uint32_t m = 0; m < num_points_5; ++m){
+        trans_cloud.points[m + ((count*num_points_2)+(count2*num_points_4)+(count3*num_points_6)+num_points_1+num_points_3)].x = 0;
+        trans_cloud.points[m + ((count*num_points_2)+(count2*num_points_4)+(count3*num_points_6)+num_points_1+num_points_3)].y = tube_diameter*cos(m / num_points_5 * 2 * M_PI) + bend_radius_tube;
+        trans_cloud.points[m + ((count*num_points_2)+(count2*num_points_4)+(count3*num_points_6)+num_points_1+num_points_3)].z = tube_diameter*sin(m / num_points_5 * 2 * M_PI);
+        trans_cloud.channels[0].values[m + ((count*num_points_2)+(count2*num_points_4)+(count3*num_points_6)+num_points_1+num_points_3)] = cloud.channels[0].values[m + ((count*num_points_2)+(count2*num_points_4)+(count3*num_points_6)+num_points_1+num_points_3)];
+
+        for (uint32_t n = 0; n < num_points_6; ++n){
+            double distance = ((n / num_points_6) * dist_6);
+            trans_cloud.points[m + ((count*num_points_2)+(count2*num_points_4)+(count3*num_points_6)+num_points_1+num_points_3)+n].x = distance;
+            trans_cloud.points[m + ((count*num_points_2)+(count2*num_points_4)+(count3*num_points_6)+num_points_1+num_points_3)+n].y = (tube_diameter*cos(m / num_points_5 * 2 * M_PI)) + bend_radius_tube;
+            trans_cloud.points[m + ((count*num_points_2)+(count2*num_points_4)+(count3*num_points_6)+num_points_1+num_points_3)+n].z = tube_diameter*sin(m / num_points_5 * 2 * M_PI);
+            trans_cloud.channels[0].values[m + ((count*num_points_2)+(count2*num_points_4)+(count3*num_points_6)+num_points_1+num_points_3+num_points_5)-n] = cloud.channels[0].values[m + ((count*num_points_2)+(count2*num_points_4)+(count3*num_points_6)+num_points_1+num_points_3)+n];
+        }
+        count3 = count3 + 1;
     }
     cloud.points = trans_cloud.points; cloud.channels[0].values = trans_cloud.channels[0].values;
     count = 0;
@@ -376,21 +392,6 @@ void object_geometry_Transform(){
     fixed_object.child_frame_id = "inner_surface";
     fixed_object.transform.translation.x = 0.0;
     fixed_object.transform.translation.y = -bend_radius_tube;
-    fixed_object.transform.translation.z = 0.0;
-    fixed_object.transform.rotation.x = 0.0;
-    fixed_object.transform.rotation.y = 0.0;
-    fixed_object.transform.rotation.z = 0.0;
-    fixed_object.transform.rotation.w = 1.0;
-    fix_obj.publish(fixed_object);
-    tf_Transform(fixed_object);
-}
-
-void fliped_cloud_geometry_Transform(){
-    fixed_object.header.stamp = ros::Time::now();
-    fixed_object.header.frame_id = "map";
-    fixed_object.child_frame_id = "inner_surface";
-    fixed_object.transform.translation.x = 0.0;
-    fixed_object.transform.translation.y = bend_radius_tube;
     fixed_object.transform.translation.z = 0.0;
     fixed_object.transform.rotation.x = 0.0;
     fixed_object.transform.rotation.y = 0.0;
@@ -473,25 +474,24 @@ int main(int argc, char** argv){
       }
       count2 = count2 + 1;
   }
-  /*
-    for (uint32_t m = 0; m < nozzle_points_f_1; ++m){
-        nozzle_cloud.points[m + ((nozzle_count_1*nozzle_points_t_2)+(nozzle_count_2*nozzle_points_b_2)+(nozzle_count_3*nozzle_points_f_2)+nozzle_points_t_1+nozzle_points_b_1)].x = nozzle_length;
-        nozzle_cloud.points[m + ((nozzle_count_1*nozzle_points_t_2)+(nozzle_count_2*nozzle_points_b_2)+(nozzle_count_3*nozzle_points_f_2)+nozzle_points_t_1+nozzle_points_b_1)].y = nozzle_radius*cos(m / nozzle_points_f_1 * 2 * M_PI);
-        nozzle_cloud.points[m + ((nozzle_count_1*nozzle_points_t_2)+(nozzle_count_2*nozzle_points_b_2)+(nozzle_count_3*nozzle_points_f_2)+nozzle_points_t_1+nozzle_points_b_1)].z = nozzle_radius*sin(m / nozzle_points_f_1 * 2 * M_PI);
 
-        for (uint32_t n = 0; n < nozzle_points_f_2; ++n){
-            double offset = ((n / nozzle_points_f_2) * nozzle_radius);
-            nozzle_cloud.points[m + ((nozzle_count_1*nozzle_points_t_2)+(nozzle_count_2*nozzle_points_b_2)+(nozzle_count_3*nozzle_points_f_2)+nozzle_points_t_1+nozzle_points_b_1)+n].x = nozzle_length;
-            nozzle_cloud.points[m + ((nozzle_count_1*nozzle_points_t_2)+(nozzle_count_2*nozzle_points_b_2)+(nozzle_count_3*nozzle_points_f_2)+nozzle_points_t_1+nozzle_points_b_1)+n].y = offset*cos(m / nozzle_points_f_1 * 2 * M_PI);
-            nozzle_cloud.points[m + ((nozzle_count_1*nozzle_points_t_2)+(nozzle_count_2*nozzle_points_b_2)+(nozzle_count_3*nozzle_points_f_2)+nozzle_points_t_1+nozzle_points_b_1)+n].z = offset*sin(m / nozzle_points_f_1 * 2 * M_PI);
-        }
-        nozzle_count_3 = nozzle_count_3 + 1;
-    }
-    */
+  for (uint32_t m = 0; m < num_points_5; ++m){
+      cloud.points[m + ((count*num_points_2)+(count2*num_points_4)+(count3*num_points_6)+num_points_1+num_points_3)].x = (tube_diameter*cos(m / num_points_5 * 2 * M_PI)) - bend_radius_tube;
+      cloud.points[m + ((count*num_points_2)+(count2*num_points_4)+(count3*num_points_6)+num_points_1+num_points_3)].y = 0;
+      cloud.points[m + ((count*num_points_2)+(count2*num_points_4)+(count3*num_points_6)+num_points_1+num_points_3)].z = tube_diameter*sin(m / num_points_5 * 2 * M_PI);
 
+      for (uint32_t n = 0; n < num_points_6; ++n){
+          double distance = ((n / num_points_6) * dist_6);
+          cloud.points[m + ((count*num_points_2)+(count2*num_points_4)+(count3*num_points_6)+num_points_1+num_points_3)+n].x = (tube_diameter*cos(m / num_points_5 * 2 * M_PI)) - bend_radius_tube;
+          cloud.points[m + ((count*num_points_2)+(count2*num_points_4)+(count3*num_points_6)+num_points_1+num_points_3)+n].y = -distance;
+          cloud.points[m + ((count*num_points_2)+(count2*num_points_4)+(count3*num_points_6)+num_points_1+num_points_3)+n].z = tube_diameter*sin(m / num_points_5 * 2 * M_PI);
+      }
+      count3 = count3 + 1;
+  }
 
   count = 0;
   count2 = 0;
+  count3 = 0;
 
   for (uint32_t i = 0; i < wws_points_1; ++i){
       wws_cloud.points[i + (wws_count*wws_points_2)].x = 0;
@@ -529,14 +529,9 @@ int main(int argc, char** argv){
               cloud.header.stamp = ros::Time::now();
               cloud_pub_surface.publish(cloud);
               ROS_INFO("Cloud updated");
-              fliped_cloud_geometry_Transform();
               ros::Duration(0.5).sleep();
               ros::spinOnce();
           }
-          fliped_cloud_geometry_Transform();
-      }
-      else{
-          object_geometry_Transform();
       }
 
       duration = (ros::Time::now()-cancel_update).toSec();
@@ -553,6 +548,7 @@ int main(int argc, char** argv){
           timer = ros::Time::now();
       }
 
+      object_geometry_Transform();
       water_workspace_Transform();
 
       cloud.header.stamp = ros::Time::now();
