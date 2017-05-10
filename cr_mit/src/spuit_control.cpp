@@ -132,7 +132,7 @@ void object_geometry_Transform(){
     fix_obj.publish(fixed_object);
     tf_Transform(fixed_object);
 }
-
+/*
 void init_trajectory(){
 
     //init trajectory
@@ -205,7 +205,9 @@ void init_trajectory(){
         ros::Duration((time_interval*3*10)/(const_*3*10)).sleep();
     }
 }
+*/
 
+/*
 void optional_trajectory(){
     double value_x_pos_back = -0.03;
     for(int i=0;i!=const_;i++){
@@ -284,7 +286,9 @@ void optional_trajectory(){
         ros::Duration((time_interval*3*10)/(const_*3*10)).sleep();
     }
 }
+*/
 
+//5-DOF
 void most_optimal_trajectory(){
 
     //moving nozzle backwards
@@ -297,7 +301,7 @@ void most_optimal_trajectory(){
         rotation_axis_geometry_Transform();
         ros::Duration((time_interval*0.75)/const_).sleep();
     }
-/*
+
     // moving nozzle upwards + rotate in upwards movement
     double value_z_pos_up = 0.04;
     double value_R_angle_up = degrees_to_radian(10);
@@ -332,7 +336,7 @@ void most_optimal_trajectory(){
         rotation_axis_geometry_Transform();
         ros::Duration(time_interval*0.75/const_).sleep();
     }
-*/
+
     // moving nozzle into the object
     double value_x_pos_into_obj = 0.135;
     for(int i=0;i!=const_;i++){
@@ -382,7 +386,7 @@ void most_optimal_trajectory(){
         base_geometry_Transform();
         head_geometry_Transform();
         rotation_axis_geometry_Transform();
-        ros::Duration((time_interval*0.35)/const_*4).sleep();
+        ros::Duration((time_interval*0.5)/const_*4).sleep();
     }
     for(int i=0;i!=const_;i++){
         nozzle_frames.angleY_rot_axis = nozzle_frames.angleY_rot_axis - (value_Y_angle_rot_axis_init/const_);
@@ -396,13 +400,170 @@ void most_optimal_trajectory(){
         rotation_axis_geometry_Transform();
         ros::Duration(time_interval/const_).sleep();
     }
-// move out of the elbow (2)
 
-    ros::Duration(15.0).sleep();
-/*
-    // rotate to hit most inner surface
-    for(int i=0;i!=(const_*3);i++){
+    // move out of the elbow (2)
+
+    //moving nozzle a little bit forward
+    double value_x_pos_forw = 0.01;
+    for(int i=0;i!=const_;i++){
+        nozzle_frames.disX_head = nozzle_frames.disX_head - (value_x_pos_forw/const_);
+        spuit_geometry_Transform();
+        base_geometry_Transform();
+        head_geometry_Transform();
+        rotation_axis_geometry_Transform();
+        ros::Duration((time_interval*0.75)/const_).sleep();
+    }
+
+    // angled positioned to move out the last part
+    double value_Y_angle_spuit_2 = degrees_to_radian(-1.5);
+    double value_Y_pos_spuit_2 = -0.0125;
+    for(int i=0;i!=const_;i++){
+        nozzle_frames.angleY_spuit = nozzle_frames.angleY_spuit + (value_Y_angle_spuit_2/const_);
+        nozzle_frames.disY_head = nozzle_frames.disY_head - (value_Y_pos_spuit_2/const_);
+        spuit_geometry_Transform();
+        base_geometry_Transform();
+        head_geometry_Transform();
+        rotation_axis_geometry_Transform();
+        ros::Duration(time_interval/const_).sleep();
+    }
+
+    // rotate + move out of object to clean first part of the object
+     double value_x_pos_into_obj_2 = 0.105;
+    for(int i=0;i!=(const_*3*10);i++){
         nozzle_frames.angleP_base = nozzle_frames.angleP_base + (value_P_angle_base_rot_base/(const_*3));
+        nozzle_frames.disX_head = nozzle_frames.disX_head + (value_x_pos_into_obj_2/(const_*3*10));
+        spuit_geometry_Transform();
+        base_geometry_Transform();
+        head_geometry_Transform();
+        rotation_axis_geometry_Transform();
+        ros::Duration((time_interval*3*10*0.65)/(const_*3*10)).sleep();
+    }
+}
+
+void DOF2_movement(){
+    nozzle_frames.angleY_spuit = degrees_to_radian(8);
+    nozzle_frames.angleY_rot_axis = degrees_to_radian(-10);
+    nozzle_frames.disY_rot_axis = 0.015;
+
+
+    //moving nozzle backwards
+    double value_x_pos_back = -0.03;
+    for(int i=0;i!=const_;i++){
+        nozzle_frames.disX_head = nozzle_frames.disX_head - (value_x_pos_back/const_);
+        spuit_geometry_Transform();
+        base_geometry_Transform();
+        head_geometry_Transform();
+        rotation_axis_geometry_Transform();
+        ros::Duration((time_interval*0.75)/const_).sleep();
+    }
+
+    // rotate nozzle 360 degrees
+    double value_P_angle_rot = degrees_to_radian(360);
+    for(int i=0; i!=(const_*3); i++){
+        nozzle_frames.angleP_base = nozzle_frames.angleP_base + (value_P_angle_rot/(const_*3));
+        spuit_geometry_Transform();
+        base_geometry_Transform();
+        head_geometry_Transform();
+        rotation_axis_geometry_Transform();
+        ros::Duration((time_interval*3)/(const_*3)).sleep();
+    }
+
+    // moving nozzle into the object
+    double value_x_pos_into_obj = 0.145;
+    double value_P_angle_base_rot_base = degrees_to_radian(360);
+    for(int i=0;i!=(const_*10);i++){
+        nozzle_frames.disX_head = nozzle_frames.disX_head - (value_x_pos_into_obj/(const_*10));
+        nozzle_frames.angleP_base = nozzle_frames.angleP_base + (value_P_angle_base_rot_base/(const_));
+        spuit_geometry_Transform();
+        base_geometry_Transform();
+        head_geometry_Transform();
+        rotation_axis_geometry_Transform();
+        ros::Duration((time_interval*10*2.2)/(const_*10)).sleep();
+    }
+
+}
+
+void DOF3_movement(){
+    nozzle_frames.angleY_spuit = degrees_to_radian(8);
+    nozzle_frames.angleY_rot_axis = degrees_to_radian(-10);
+    nozzle_frames.disY_rot_axis = 0.015;
+
+    //moving nozzle backwards
+    double value_x_pos_back = -0.03;
+    for(int i=0;i!=const_;i++){
+        nozzle_frames.disX_head = nozzle_frames.disX_head - (value_x_pos_back/const_);
+        spuit_geometry_Transform();
+        base_geometry_Transform();
+        head_geometry_Transform();
+        rotation_axis_geometry_Transform();
+        ros::Duration((time_interval*0.75)/const_).sleep();
+    }
+
+    // rotate nozzle 360 degrees
+    double value_P_angle_rot = degrees_to_radian(360);
+    for(int i=0; i!=(const_*3); i++){
+        nozzle_frames.angleP_base = nozzle_frames.angleP_base + (value_P_angle_rot/(const_*3));
+        spuit_geometry_Transform();
+        base_geometry_Transform();
+        head_geometry_Transform();
+        rotation_axis_geometry_Transform();
+        ros::Duration((time_interval*3)/(const_*3)).sleep();
+    }
+
+    // moving nozzle into the object
+    double value_x_pos_into_obj = 0.145;
+    double value_P_angle_base_rot_base = degrees_to_radian(360);
+    double added_distance = 0.0009;
+    double added_distance2 = 0.00075;
+    double added_angle = degrees_to_radian(0.085);
+    for(int i=0;i!=(const_*10);i++){
+        nozzle_frames.disY_rot_axis = nozzle_frames.disY_rot_axis + (added_distance*sin(i / const_ * 2 * M_PI));
+        nozzle_frames.disY_spuit = nozzle_frames.disY_spuit - (added_distance2*sin(i / const_ * 2 * M_PI));
+        nozzle_frames.angleY_rot_axis = nozzle_frames.angleY_rot_axis - (added_angle*sin(i / const_ * 2 * M_PI));
+        nozzle_frames.disX_head = nozzle_frames.disX_head - (value_x_pos_into_obj/(const_*10));
+        nozzle_frames.angleP_base = nozzle_frames.angleP_base + (value_P_angle_base_rot_base/(const_));
+        spuit_geometry_Transform();
+        base_geometry_Transform();
+        head_geometry_Transform();
+        rotation_axis_geometry_Transform();
+        ros::Duration((time_interval*10*2.5)/(const_*10)).sleep();
+    }
+}
+
+void DOF4_movement(){
+
+    //moving nozzle backwards
+    double value_x_pos_back = -0.03;
+    for(int i=0;i!=const_;i++){
+        nozzle_frames.disX_head = nozzle_frames.disX_head - (value_x_pos_back/const_);
+        spuit_geometry_Transform();
+        base_geometry_Transform();
+        head_geometry_Transform();
+        rotation_axis_geometry_Transform();
+        ros::Duration((time_interval*0.75)/const_).sleep();
+    }
+
+    // put nozzle in angled position to clean most inner surface
+    double value_Y_angle_spuit_inside_comp = degrees_to_radian(-1.5);
+    double value_Y_angle_rot_axis_init = degrees_to_radian(15);
+    double value_Y_pos_spuit_inside_comp = 0.035;
+    double value_Y_pos_frame_ins_comp = 0.01;
+    for(int i=0;i!=const_;i++){
+        nozzle_frames.angleY_rot_axis = nozzle_frames.angleY_rot_axis + (value_Y_angle_rot_axis_init/const_);
+        nozzle_frames.angleY_spuit = nozzle_frames.angleY_spuit + (value_Y_angle_spuit_inside_comp/const_);
+        nozzle_frames.disY_head = nozzle_frames.disY_head - (value_Y_pos_spuit_inside_comp/const_);
+        nozzle_frames.disY_spuit = nozzle_frames.disY_spuit + (value_Y_pos_frame_ins_comp/const_);
+        spuit_geometry_Transform();
+        base_geometry_Transform();
+        head_geometry_Transform();
+        rotation_axis_geometry_Transform();
+        ros::Duration(time_interval/const_).sleep();
+    }
+
+    // rotate to clean spot that most hard reachable
+    double value_P_angle_base_rot_base = degrees_to_radian(360);
+    for(int i=0;i!=(const_*3);i++){
+        nozzle_frames.angleP_rot_axis = nozzle_frames.angleP_rot_axis + (value_P_angle_base_rot_base/(const_*3));
         spuit_geometry_Transform();
         base_geometry_Transform();
         head_geometry_Transform();
@@ -410,17 +571,121 @@ void most_optimal_trajectory(){
         ros::Duration((time_interval*1.5)/(const_*3)).sleep();
     }
 
-    // rotate + move out of object to clean first part of the object
-    for(int i=0;i!=(const_*3*5);i++){
-        nozzle_frames.angleP_base = nozzle_frames.angleP_base + (value_P_angle_base_rot_base/(const_*3));
-        nozzle_frames.disX_head = nozzle_frames.disX_head + (value_x_pos_into_obj/(const_*3*5));
+    // moving nozzle into the object
+    double value_x_pos_into_obj = 0.135;
+    for(int i=0;i!=const_;i++){
+        nozzle_frames.disX_head = nozzle_frames.disX_head - (value_x_pos_into_obj/const_);
         spuit_geometry_Transform();
         base_geometry_Transform();
         head_geometry_Transform();
         rotation_axis_geometry_Transform();
-        ros::Duration((time_interval*3*5)/(const_*3*5)).sleep();
+        ros::Duration((time_interval)/const_).sleep();
     }
-    */
+
+    // put nozzle in angled position to clean most inner surface
+    value_Y_angle_spuit_inside_comp = degrees_to_radian(-1.5);
+    value_Y_angle_rot_axis_init = degrees_to_radian(15);
+    value_Y_pos_spuit_inside_comp = 0.035;
+    value_Y_pos_frame_ins_comp = 0.01;
+    for(int i=0;i!=const_;i++){
+        nozzle_frames.angleY_rot_axis = nozzle_frames.angleY_rot_axis + (value_Y_angle_rot_axis_init/const_);
+        nozzle_frames.angleY_spuit = nozzle_frames.angleY_spuit + (value_Y_angle_spuit_inside_comp/const_);
+        nozzle_frames.disY_head = nozzle_frames.disY_head - (value_Y_pos_spuit_inside_comp/const_);
+        nozzle_frames.disY_spuit = nozzle_frames.disY_spuit + (value_Y_pos_frame_ins_comp/const_);
+        spuit_geometry_Transform();
+        base_geometry_Transform();
+        head_geometry_Transform();
+        rotation_axis_geometry_Transform();
+        ros::Duration(time_interval/const_).sleep();
+    }
+
+
+    // moving nozzle to middle line
+    for(int i=0; i!=const_;i++){
+        nozzle_frames.angleY_rot_axis = nozzle_frames.angleY_rot_axis - (value_Y_angle_rot_axis_init/const_);
+        nozzle_frames.angleY_spuit = nozzle_frames.angleY_spuit - (value_Y_angle_spuit_inside_comp/const_);
+        nozzle_frames.disY_head = nozzle_frames.disY_head + (value_Y_pos_spuit_inside_comp/const_);
+        nozzle_frames.disY_spuit = nozzle_frames.disY_spuit - (value_Y_pos_frame_ins_comp/const_);
+        spuit_geometry_Transform();
+        base_geometry_Transform();
+        head_geometry_Transform();
+        rotation_axis_geometry_Transform();
+        ros::Duration(time_interval/const_).sleep();
+    }
+
+
+    // rotate to clean spot that most hard reachable
+    value_P_angle_base_rot_base = degrees_to_radian(360);
+    for(int i=0;i!=(const_*3);i++){
+        nozzle_frames.angleP_rot_axis = nozzle_frames.angleP_rot_axis + (value_P_angle_base_rot_base/(const_*3));
+        spuit_geometry_Transform();
+        base_geometry_Transform();
+        head_geometry_Transform();
+        rotation_axis_geometry_Transform();
+        ros::Duration((time_interval*1.5)/(const_*3)).sleep();
+    }
+
+    // moving out of the elbow (1)
+    double value_x_pos_out_obj_1 = 0.05;
+    for(int i=0;i!=(const_*4);i++){
+        nozzle_frames.disX_spuit = nozzle_frames.disX_spuit + (value_x_pos_out_obj_1/(const_*4));
+        nozzle_frames.angleP_rot_axis = nozzle_frames.angleP_rot_axis + (value_P_angle_base_rot_base/(const_));
+        spuit_geometry_Transform();
+        base_geometry_Transform();
+        head_geometry_Transform();
+        rotation_axis_geometry_Transform();
+        ros::Duration((time_interval*0.5)/const_*4).sleep();
+    }
+    for(int i=0;i!=const_;i++){
+        nozzle_frames.angleY_rot_axis = nozzle_frames.angleY_rot_axis - (value_Y_angle_rot_axis_init/const_);
+        nozzle_frames.angleY_spuit = nozzle_frames.angleY_spuit - (value_Y_angle_spuit_inside_comp/const_);
+        nozzle_frames.disY_head = nozzle_frames.disY_head + (value_Y_pos_spuit_inside_comp/const_);
+        //nozzle_frames.disY_rot_axis = nozzle_frames.disY_rot_axis + (value_Y_pos_frame_ins_comp/const_);
+        nozzle_frames.disY_spuit = nozzle_frames.disY_spuit - (value_Y_pos_frame_ins_comp/const_);
+        spuit_geometry_Transform();
+        base_geometry_Transform();
+        head_geometry_Transform();
+        rotation_axis_geometry_Transform();
+        ros::Duration(time_interval/const_).sleep();
+    }
+
+    // move out of the elbow (2)
+
+    //moving nozzle a little bit forward
+    double value_x_pos_forw = 0.01;
+    for(int i=0;i!=const_;i++){
+        nozzle_frames.disX_head = nozzle_frames.disX_head - (value_x_pos_forw/const_);
+        spuit_geometry_Transform();
+        base_geometry_Transform();
+        head_geometry_Transform();
+        rotation_axis_geometry_Transform();
+        ros::Duration((time_interval*0.75)/const_).sleep();
+    }
+
+    // angled positioned to move out the last part
+    double value_Y_angle_spuit_2 = degrees_to_radian(-1.5);
+    double value_Y_pos_spuit_2 = -0.0125;
+    for(int i=0;i!=const_;i++){
+        nozzle_frames.angleY_spuit = nozzle_frames.angleY_spuit + (value_Y_angle_spuit_2/const_);
+        nozzle_frames.disY_head = nozzle_frames.disY_head - (value_Y_pos_spuit_2/const_);
+        spuit_geometry_Transform();
+        base_geometry_Transform();
+        head_geometry_Transform();
+        rotation_axis_geometry_Transform();
+        ros::Duration(time_interval/const_).sleep();
+    }
+
+    // rotate + move out of object to clean first part of the object
+     double value_x_pos_into_obj_2 = 0.105;
+    for(int i=0;i!=(const_*3*10);i++){
+        nozzle_frames.angleP_base = nozzle_frames.angleP_base + (value_P_angle_base_rot_base/(const_*3));
+        nozzle_frames.disX_head = nozzle_frames.disX_head + (value_x_pos_into_obj_2/(const_*3*10));
+        spuit_geometry_Transform();
+        base_geometry_Transform();
+        head_geometry_Transform();
+        rotation_axis_geometry_Transform();
+        ros::Duration((time_interval*3*10*0.65)/(const_*3*10)).sleep();
+    }
 }
 
 int main(int argc, char **argv){
@@ -445,7 +710,10 @@ int main(int argc, char **argv){
 
         //init_trajectory();
         //optional_trajectory();
-        most_optimal_trajectory();
+        //most_optimal_trajectory();
+        //DOF2_movement();
+        //DOF3_movement();
+        DOF4_movement();
         send_flip_command.publish(flip_msg);
 
     }
