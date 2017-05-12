@@ -239,11 +239,12 @@ struct ans{
     double y;
     double z;
 };
+struct ans answ;
 
+// tube dia= 0.05 -> bend rad = 0.15 #properties:
+///*
 float bend_radius_tube = 0.15;
 float tube_diameter = 0.025;
-
-struct ans answ;
 
 double wws_radius = 0.02;
 
@@ -264,6 +265,35 @@ int wws_count = 0;
 double wws_points_1 = 50;
 double wws_points_2 = 50;
 unsigned int wws_num_points = 3000;
+//end of tube properties
+//*/
+
+// Tube dia= 0.30 -> bed rad = 0.9 #properties:
+/*
+float bend_radius_tube = 0.9;
+float tube_diameter = 0.15;
+
+double wws_radius = 0.02;
+
+int count = 0;
+int count2 = 0;
+int count3 = 0;
+double num_points_1 = 200;
+double num_points_2 = 400;
+double num_points_3 = 200;
+double num_points_4 = 60;
+double num_points_5 = 200;
+double num_points_6 = 60;
+double dist_4 = 0.1;
+double dist_6 = 0.1;
+unsigned int num_points = 120000;
+
+int wws_count = 0;
+double wws_points_1 = 50;
+double wws_points_2 = 50;
+unsigned int wws_num_points = 3000;
+*/
+//end of tube properties
 
 bool set_timer = false;
 ros::Time timer;
