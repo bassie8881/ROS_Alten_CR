@@ -747,9 +747,9 @@ int main(int argc, char **argv){
         //init_trajectory();
         //optional_trajectory();
 
-        //DOF2_movement();
+        DOF2_movement();
         //DOF3_movement();
-        DOF4_movement();
+        //DOF4_movement();
         //most_optimal_trajectory(); //5DOF
         send_flip_command.publish(flip_msg);
 

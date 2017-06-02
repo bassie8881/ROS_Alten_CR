@@ -66,7 +66,7 @@ void findCleanedSurface(){
                     double x_b = surface_cloud_map.points[i].x - transform_surf.getOrigin().x();
                     double y_b = surface_cloud_map.points[i].y - transform_surf.getOrigin().y();
                     double z_b = surface_cloud_map.points[i].z - transform_surf.getOrigin().z();
-                    if(abs(cbrt((x_b*x_b)+(y_b*y_b)+(z_b*z_b))) <= d){
+                    if(abs(sqrt((x_b*x_b)+(y_b*y_b)+(z_b*z_b))) <= d){
                         cleaned_surface.header.stamp = ros::Time::now();
                         cleaned_surface.header.frame_id = "cleaned_surface";
                         cleaned_surface.channels.resize(1);
